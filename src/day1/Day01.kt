@@ -1,8 +1,10 @@
-import kotlin.text.get
+package day1
+
+import readInput
 
 fun main() {
 
-    var input = readInput("Day01")
+    var input = readInput("day1/Day01")
     var resultPart1 = part1(input)
     var resultPart2 = part2(input)
 
