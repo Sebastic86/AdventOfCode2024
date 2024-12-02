@@ -3,7 +3,6 @@ package day2
 import readInput
 
 fun main() {
-
     var input = readInput("day2/Day02")
     println(part1(input))
     println(part2(input))

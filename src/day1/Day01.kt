@@ -3,15 +3,12 @@ package day1
 import readInput
 
 fun main() {
-
     var input = readInput("day1/Day01")
     var resultPart1 = part1(input)
     var resultPart2 = part2(input)
 
     println(resultPart1)
     println(resultPart2)
-
-
 }
 
 fun part1(input: List<String>): Int {
