@@ -1,21 +1,58 @@
+import kotlin.text.get
+
 fun main() {
-    fun part1(input: List<String>): Int {
-        return input.size
-    }
 
-    fun part2(input: List<String>): Int {
-        return input.size
-    }
+    var input = readInput("Day01")
+    var resultPart1 = part1(input)
+    var resultPart2 = part2(input)
 
-    // Test if implementation meets criteria from the description, like:
-    check(part1(listOf("test_input")) == 1)
+    println(resultPart1)
+    println(resultPart2)
 
-    // Or read a large test input from the `src/Day01_test.txt` file:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
 
-    // Read the input from the `src/Day01.txt` file.
-    val input = readInput("Day01")
-    part1(input).println()
-    part2(input).println()
 }
+
+fun part1(input: List<String>): Int {
+    var splittedList = splitLists(input)
+    var listOne = splittedList.first
+    var listTwo = splittedList.second
+
+    listOne.sort()
+    listTwo.sort()
+
+    var result = listOne.mapIndexed { index, element ->
+        var max = listTwo[index].coerceAtLeast(element)
+        var min = listTwo[index].coerceAtMost(element)
+        max - min
+    }.sum()
+
+    return result
+}
+
+fun part2(input: List<String>): Int {
+    var splittedList = splitLists(input)
+    var listOne = splittedList.first
+    var listTwo = splittedList.second
+
+    return listOne.sumOf { element ->
+        element * listTwo.count { element == it }
+    }
+}
+
+fun splitLists(input: List<String>): Pair<MutableList<Int>, MutableList<Int>> {
+    var listOne = mutableListOf<Int>()
+    var listTwo = mutableListOf<Int>()
+    input.forEach { line ->
+        val splitted = line.split("   ")
+
+        if (splitted[0].isNotEmpty()) {
+            listOne.add(splitted[0].toInt())
+        }
+
+        if (splitted[1].isNotEmpty()) {
+            listTwo.add(splitted[1].toInt())
+        }
+    }
+    return Pair(listOne, listTwo)
+}
+
