@@ -1,9 +1,9 @@
 package day2
 
-import readInput
+import readInputAsLines
 
 fun main() {
-    var input = readInput("day2/Day02")
+    var input = readInputAsLines("day2/Day02")
     println(part1(input))
     println(part2(input))
 }
