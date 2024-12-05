@@ -75,8 +75,8 @@ fun orderList(orderingRules: Map<Int, List<Int>>, update: List<Int>): List<Int> 
 
 
 fun findMiddleNumber(update: List<Int>): Int {
-    val middle = update.size / 2 + 1
-    return update[middle - 1]
+    val middle = update.size / 2
+    return update[middle]
 }
 
 fun isCorrectOrder(
