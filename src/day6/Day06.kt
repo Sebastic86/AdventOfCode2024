@@ -25,8 +25,8 @@ fun main() {
     println("Starting on [${startPoint.x}, ${startPoint.y}]")
 
 
-    var resultPart1 = part1(map, startPoint)
-    println("Part 1: $resultPart1")
+//    var resultPart1 = part1(map, startPoint)
+//    println("Part 1: $resultPart1")
 
     var resultPart2 = part2(map, startPoint)
     println("Part 2: $resultPart2")
@@ -110,37 +110,26 @@ fun canCreateLoop(
     visitedPoints: MutableSet<Pair<Point, Motion>>
 ): Boolean {
     var nextDirection = getNextDirection(currentDirection)
-    var x = currentPosition.x
-    var y = currentPosition.y
-    var position = currentPosition
+    var nextPosition = currentPosition
     var positionsOfTurns = turnMap.values.map{it.second}.toSet()
     var positionsToMotion = visitedPoints.groupBy({ it.first }, { it.second }).toMap()
 
-    while( !(x < 0) && !(x >= map.size) && !(y < 0) && !(y >= map[0].size)) {
-        if(!nextStepIsValid(map, nextDirection, map[x][y])){
-            return false
+    while (nextStepIsValid(map, nextDirection, nextPosition)) {
+        if (needsToTurn(map, nextDirection, nextPosition)) {
+            nextDirection = getNextDirection(currentDirection)
+            nextPosition = getNextPosition(map, nextDirection, nextPosition)
+        } else {
+            nextPosition = getNextPosition(map, nextDirection, nextPosition)
         }
-        position = getNextPosition(map, nextDirection, map[x][y])
-        if(positionsOfTurns.contains(position) || positionsToMotion[position]?.contains(nextDirection) == true) {
+        if(positionsToMotion[nextPosition]?.contains(nextDirection) == true || positionsOfTurns.contains(nextPosition)) {
             var blockadePoint = getNextPosition(map, currentDirection, currentPosition)
             blockadePoint.debugContent = '0'
             println("create loop by putting blockade on ${blockadePoint.x}, ${blockadePoint.y}")
             return true
         }
-        if(canTurn(map, nextDirection, position) && needsToTurn(map, nextDirection, position)) {
-            nextDirection = getNextDirection(currentDirection)
-        }
-        if(position.content == '#'){
-            return false
-        }
-        when(nextDirection){
-            Motion.UP -> x = x - 1
-            Motion.DOWN -> x = x + 1
-            Motion.LEFT -> y = y - 1
-            Motion.RIGHT -> y = y + 1
-        }
     }
     return false
+
 }
 
 fun canTurn(map: Array<Array<Point>>, currentMotion: Motion, currentPosition: Point) : Boolean{
