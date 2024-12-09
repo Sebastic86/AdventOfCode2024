@@ -10,10 +10,10 @@ fun main() {
         .map { it.split(":") }
         .map { it[0].toLong() to it[1].trim().split(" ").map { it.toLong() } }
 
-    println(part1(map))
+    println(part1And2(map))
 }
 
-fun part1(input: List<Pair<Long, List<Long>>>): Long =
+fun part1And2(input: List<Pair<Long, List<Long>>>): Long =
     input.sumOf { pair ->
         testAllPaths(pair)
     }
@@ -45,8 +45,9 @@ fun process(current: Node, index: Int, numbers: List<Long>, path: MutableList<No
 }
 
 
+//REMOVE CONCATENATE FOR PART 1
 enum class Operator {
-    PLUS, MULTIPLY
+    PLUS, MULTIPLY, CONCATENATE
 }
 
 data class Node(val number: Long, val operator: Operator? = null, val next: Node? = null) {
@@ -55,6 +56,7 @@ data class Node(val number: Long, val operator: Operator? = null, val next: Node
             return when(operator){
                 Operator.PLUS -> number + next.calculate()
                 Operator.MULTIPLY -> number * next.calculate()
+                Operator.CONCATENATE -> "${next.calculate().toString()}${number.toString()}".toLong()
             }
         }
         return number
