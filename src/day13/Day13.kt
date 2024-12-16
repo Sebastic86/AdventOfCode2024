@@ -50,8 +50,6 @@ class Game{
     }
 }
 
-data class Location(var x: Int, var y: Int, var numberOfA: Int, var numberOfB: Int)
-
 data class Prize(val x: Int, val y: Int)
 
 data class Button(val x: Int, val y: Int, val tokens: Int)
