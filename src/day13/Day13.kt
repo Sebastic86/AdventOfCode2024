@@ -7,15 +7,18 @@ import java.util.Queue
 fun main() {
     var input = readInput("day13/Day13")
     println(part1(input))
-
+    println(part2(input))
 }
 
-fun part1(input: String): Int =
+fun part1(input: String): Long =
      convertInputToGames(input).sumOf { it.numberOfTokensForPrize() }
 
-fun convertInputToGames(input: String) : List<Game> =
+fun part2(input: String): Long =
+    convertInputToGames(input, true).sumOf { it.numberOfTokensForPrize() }
+
+fun convertInputToGames(input: String, withScale: Boolean = false) : List<Game> =
     input.split("\n\n")
-        .map { part -> Game(part.lines()) }
+        .map { part -> Game(part.lines(), withScale) }
         .toList()
 
 class Game{
@@ -28,17 +31,29 @@ class Game{
         val PRIZE_REGEX = """X=(\d+), Y=(\d+)""".toRegex()
     }
 
-    constructor(input: List<String>) {
+    constructor(input: List<String>, withScale: Boolean = false) {
         val matchesButtonA = BUTTON_REGEX.find(input.get(0))
         val matchesButtonB = BUTTON_REGEX.find(input.get(1))
         val matchesPrize = PRIZE_REGEX.find(input.get(2))
 
-        this.buttonA = Button(matchesButtonA?.groups[1]?.value?.toInt() ?: 1,matchesButtonA?.groups[2]?.value?.toInt() ?: 1, 3)
-        this.buttonB = Button(matchesButtonB?.groups[1]?.value?.toInt() ?: 1,matchesButtonB?.groups[2]?.value?.toInt() ?: 1, 1)
-        this.prize = Prize(matchesPrize?.groups[1]?.value?.toInt() ?: 1,matchesPrize?.groups[2]?.value?.toInt() ?: 1)
+        this.buttonA = Button(matchesButtonA?.groups[1]?.value?.toLong() ?: 1,matchesButtonA?.groups[2]?.value?.toLong() ?: 1, 3)
+        this.buttonB = Button(matchesButtonB?.groups[1]?.value?.toLong() ?: 1,matchesButtonB?.groups[2]?.value?.toLong() ?: 1, 1)
+        if(withScale){
+            this.prize = Prize( (matchesPrize?.groups[1]?.value?.toLong() ?: 1) + 10000000000000 , (matchesPrize?.groups[2]?.value?.toLong() ?: 1) + 10000000000000)
+        } else{
+            this.prize = Prize(matchesPrize?.groups[1]?.value?.toLong() ?: 1,matchesPrize?.groups[2]?.value?.toLong() ?: 1)
+        }
+
     }
 
-    fun numberOfTokensForPrize() : Int {
+    fun numberOfTokensForPrize() : Long {
+        //Button A: X+94, Y+34
+        //Button B: X+22, Y+67
+        //Prize: X=8400, Y=5400
+
+        // (94 * 5400 - 34 * 8400) / 94 * 67 - 34 * 22
+
+
         val b = (buttonA.x * prize.y - buttonA.y * prize.x) / (buttonA.x * buttonB.y - buttonA.y * buttonB.x)
         val a = (prize.y - buttonB.y * b) / buttonA.y
         val check = buttonA.y * a + buttonB.y * b == prize.y && buttonA.x * a + buttonB.x * b == prize.x
@@ -50,6 +65,6 @@ class Game{
     }
 }
 
-data class Prize(val x: Int, val y: Int)
+data class Prize(val x: Long, val y: Long)
 
-data class Button(val x: Int, val y: Int, val tokens: Int)
+data class Button(val x: Long, val y: Long, val tokens: Int)
