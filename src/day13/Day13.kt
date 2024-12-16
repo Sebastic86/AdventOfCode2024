@@ -47,13 +47,6 @@ class Game{
     }
 
     fun numberOfTokensForPrize() : Long {
-        //Button A: X+94, Y+34
-        //Button B: X+22, Y+67
-        //Prize: X=8400, Y=5400
-
-        // (94 * 5400 - 34 * 8400) / 94 * 67 - 34 * 22
-
-
         val b = (buttonA.x * prize.y - buttonA.y * prize.x) / (buttonA.x * buttonB.y - buttonA.y * buttonB.x)
         val a = (prize.y - buttonB.y * b) / buttonA.y
         val check = buttonA.y * a + buttonB.y * b == prize.y && buttonA.x * a + buttonB.x * b == prize.x
